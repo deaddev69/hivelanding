@@ -18,13 +18,15 @@ export async function POST(request: Request) {
 
     const targetUrl = `${SHEET_ENDPOINT}?${queryParams}`;
 
-    // Step 1: Check if Google redirects to accounts.google.com (permission error)
+    // Step 1: Make EXACTLY ONE request to script.google.com so doGet runs only once
     const initialResponse = await fetch(targetUrl, {
       method: 'GET',
       redirect: 'manual',
     });
 
     const locationHeader = initialResponse.headers.get('location') || '';
+
+    // If Google redirected to login, permission is denied and nothing was saved
     if (initialResponse.status === 302 && locationHeader.includes('accounts.google.com')) {
       console.error('Google Apps Script permission error: Redirected to Google login. Deployment must have "Who has access" set to "Anyone".');
       return NextResponse.json(
@@ -37,23 +39,14 @@ export async function POST(request: Request) {
       );
     }
 
-    // Step 2: If redirect is to script.googleusercontent.com or 200 OK, follow it completely
-    const finalResponse = await fetch(targetUrl, {
-      method: 'GET',
-      redirect: 'follow',
-    });
-
-    const responseText = await finalResponse.text().catch(() => '');
-    
-    // Additionally, try sending a POST fallback just in case the Apps Script handles doPost
-    try {
-      await fetch(SHEET_ENDPOINT, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: queryParams,
-      }).catch(() => {});
-    } catch {
-      // Ignore POST fallback errors if only doGet is implemented
+    // Step 2: If Google redirected to script.googleusercontent.com, doGet() already ran once and appended the row!
+    // We fetch ONLY the echo output URL (script.googleusercontent.com) to get the text without re-running doGet() on script.google.com
+    let responseText = '';
+    if (initialResponse.status === 302 && locationHeader.includes('script.googleusercontent.com')) {
+      const echoResponse = await fetch(locationHeader, { method: 'GET' });
+      responseText = await echoResponse.text().catch(() => '');
+    } else if (initialResponse.status === 200) {
+      responseText = await initialResponse.text().catch(() => '');
     }
 
     return NextResponse.json({ success: true, message: responseText });
