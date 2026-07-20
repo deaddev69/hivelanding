@@ -116,14 +116,7 @@ export default function WaitlistPage() {
     setStatus('loading');
 
     try {
-      const queryParams = new URLSearchParams({ name: name.trim(), phone: phone.trim(), email: email.trim() }).toString();
-      const targetUrl = `${SHEET_ENDPOINT}?${queryParams}`;
-
-      // 1. Image Beacon fallback
-      const beacon = new window.Image();
-      beacon.src = targetUrl;
-
-      // 2. Server API Route submission (bypasses browser CORS & Adblockers)
+      // Server API Route submission (bypasses browser CORS & Adblockers, exactly 1 row per submission)
       const res = await fetch('/api/waitlist', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
