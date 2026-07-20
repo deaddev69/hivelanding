@@ -119,25 +119,39 @@ export default function WaitlistPage() {
       const queryParams = new URLSearchParams({ name: name.trim(), phone: phone.trim(), email: email.trim() }).toString();
       const targetUrl = `${SHEET_ENDPOINT}?${queryParams}`;
 
-      // 1. Image Beacon (un-abortable background browser GET request)
+      // 1. Image Beacon fallback
       const beacon = new window.Image();
       beacon.src = targetUrl;
 
-      // 2. Secondary fetch fallback
-      fetch(targetUrl, { method: 'GET', mode: 'no-cors' }).catch(() => { });
+      // 2. Server API Route submission (bypasses browser CORS & Adblockers)
+      const res = await fetch('/api/waitlist', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: name.trim(),
+          phone: phone.trim(),
+          email: email.trim(),
+        }),
+      });
+
+      const data = await res.json().catch(() => ({}));
+
+      if (data.permissionDenied) {
+        alert('Google Sheet submission failed: Your Google Apps Script deployment is set to require login. Please open Extensions > Apps Script > Deploy > Manage Deployments > Edit, and change "Who has access" to "Anyone".');
+        setStatus('error');
+        return;
+      }
     } catch (err) {
-      console.error(err);
+      console.error('Submission error:', err);
     }
 
     // Transition UI to success after request fires
-    setTimeout(() => {
-      setStatus('success');
-      setName('');
-      setPhone('');
-      setEmail('');
-      setErrors({});
-      setTouched({});
-    }, 400);
+    setStatus('success');
+    setName('');
+    setPhone('');
+    setEmail('');
+    setErrors({});
+    setTouched({});
   };
 
   return (
