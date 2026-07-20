@@ -1,15 +1,41 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { Button, Input } from '@/components/ui';
 import { CheckCircle2, ShoppingBag, Truck, BadgeCheck } from 'lucide-react';
+
+const LAUNCH_DATE_MS = new Date('2026-08-05T00:00:00+05:30').getTime();
 
 export default function WaitlistPage() {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+
+  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+    const updateCountdown = () => {
+      const now = Date.now();
+      const diff = Math.max(0, LAUNCH_DATE_MS - now);
+      if (diff === 0) {
+        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+        return;
+      }
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+      setTimeLeft({ days, hours, minutes, seconds });
+    };
+
+    updateCountdown();
+    const interval = setInterval(updateCountdown, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   const [errors, setErrors] = useState<{ name?: string; phone?: string; email?: string }>({});
   const [touched, setTouched] = useState<{ name?: boolean; phone?: boolean; email?: boolean }>({});
@@ -169,6 +195,46 @@ export default function WaitlistPage() {
             >
               Discover carefully curated fashion, exclusive collections, and local favourites—all in one place.
             </p>
+
+            {/* ── Live Launch Countdown ─────────────────────── */}
+            <div className="w-full max-w-sm mt-6 p-4 bg-white/90 border border-[#F0E4C8] rounded-2xl flex flex-col gap-3 shadow-[0_2px_12px_-4px_rgba(26,18,0,0.04)]">
+              <div className="flex items-center justify-between text-[11px] font-semibold text-[#8C7A5A] tracking-wider uppercase px-1">
+                <span>Countdown to Launch</span>
+                <span className="text-[#1A1200]/70 font-medium lowercase">5 aug 2026</span>
+              </div>
+              {isMounted ? (
+                <div className="grid grid-cols-4 gap-2 pt-1 border-t border-[#F0E4C8]/60">
+                  <div className="flex flex-col items-center justify-center py-2 px-1 bg-[#FFFDF5] rounded-xl border border-[#F0E4C8]/70">
+                    <span className="text-[20px] font-semibold text-[#1A1200] leading-none tabular-nums" style={{ fontFamily: 'var(--font-display)' }}>
+                      {timeLeft.days}
+                    </span>
+                    <span className="text-[10px] font-medium text-[#8C7A5A] uppercase tracking-wide mt-1.5">Days</span>
+                  </div>
+                  <div className="flex flex-col items-center justify-center py-2 px-1 bg-[#FFFDF5] rounded-xl border border-[#F0E4C8]/70">
+                    <span className="text-[20px] font-semibold text-[#1A1200] leading-none tabular-nums" style={{ fontFamily: 'var(--font-display)' }}>
+                      {String(timeLeft.hours).padStart(2, '0')}
+                    </span>
+                    <span className="text-[10px] font-medium text-[#8C7A5A] uppercase tracking-wide mt-1.5">Hours</span>
+                  </div>
+                  <div className="flex flex-col items-center justify-center py-2 px-1 bg-[#FFFDF5] rounded-xl border border-[#F0E4C8]/70">
+                    <span className="text-[20px] font-semibold text-[#1A1200] leading-none tabular-nums" style={{ fontFamily: 'var(--font-display)' }}>
+                      {String(timeLeft.minutes).padStart(2, '0')}
+                    </span>
+                    <span className="text-[10px] font-medium text-[#8C7A5A] uppercase tracking-wide mt-1.5">Mins</span>
+                  </div>
+                  <div className="flex flex-col items-center justify-center py-2 px-1 bg-[#FFFDF5] rounded-xl border border-[#F0E4C8]/70">
+                    <span className="text-[20px] font-semibold text-[#1A1200] leading-none tabular-nums" style={{ fontFamily: 'var(--font-display)' }}>
+                      {String(timeLeft.seconds).padStart(2, '0')}
+                    </span>
+                    <span className="text-[10px] font-medium text-[#8C7A5A] uppercase tracking-wide mt-1.5">Secs</span>
+                  </div>
+                </div>
+              ) : (
+                <div className="h-[62px] w-full bg-[#FFFDF5] rounded-xl border border-[#F0E4C8]/70 flex items-center justify-center text-xs font-medium text-[#8C7A5A] animate-pulse">
+                  Loading countdown…
+                </div>
+              )}
+            </div>
 
             {/* ── Form ──────────────────────────────────────── */}
             <div className="w-full max-w-sm mt-6">
