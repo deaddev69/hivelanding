@@ -1,0 +1,38 @@
+@import "tailwindcss";
+
+@theme {
+  --color-hive-bg: #FFFDF5; /* Exact Warm Ivory from marketplace */
+  --color-hive-cream: #FFFDF5; /* Warm Ivory alias */
+  --color-hive-text: #2C1E00; /* Warm dark text */
+  --color-hive-dark: #1A1200; /* Rich charcoal */
+  --color-hive-text-muted: #8C7A5A; /* Warm golden-grey */
+  --color-hive-gold: #F5A623; /* Exact golden accent */
+  --color-hive-amber: #E8890C;
+  --color-hive-emerald: #10B981;
+  --color-hive-red: #EF4444;
+  --color-hive-border: #F0E4C8; /* Warm cream border */
+  --color-hive-comb: #FFF3CC; /* Honeycomb accent */
+
+  --font-sans: var(--font-manrope), "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-serif: var(--font-manrope), "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  /* General Sans — hero headline only */
+  --font-display: "General Sans", var(--font-manrope), "Inter", sans-serif;
+  
+  --animate-pulse-soft: pulse-soft 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse-soft {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+:root {
+  --background: var(--color-hive-bg);
+  --foreground: var(--color-hive-text);
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+}
