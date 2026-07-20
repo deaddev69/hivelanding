@@ -6,50 +6,112 @@ import { Button, Input } from '@/components/ui';
 import { CheckCircle2, ShoppingBag, Truck, BadgeCheck } from 'lucide-react';
 
 export default function WaitlistPage() {
+  const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
-  const [emailStatus, setEmailStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
 
-  const handlePhoneSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!phone) return;
-    setStatus('loading');
-    try {
-      const FORMSPREE_ENDPOINT = 'https://formspree.io/f/placeholder_id';
-      const response = await fetch(FORMSPREE_ENDPOINT, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phone })
-      });
-      if (response.ok || FORMSPREE_ENDPOINT.includes('placeholder_id')) {
-        setStatus('success');
-        setPhone('');
-      } else {
-        setStatus('error');
-      }
-    } catch (error) {
-      console.error(error);
-      setStatus('success');
+  const [errors, setErrors] = useState<{ name?: string; phone?: string; email?: string }>({});
+  const [touched, setTouched] = useState<{ name?: boolean; phone?: boolean; email?: boolean }>({});
+
+  const SHEET_ENDPOINT = 'https://script.google.com/macros/s/AKfycbzltQlQlhnQFQQSwOuLuwxkxvau0ani_eSiQWJo56BCUw-5Fgv0pa638RtDNQJKEo_4/exec';
+
+  // Validation functions
+  const validateName = (val: string) => {
+    const trimmed = val.trim();
+    if (!trimmed) return "Please enter your name.";
+    if (trimmed.length < 2) return "Name must be at least 2 characters.";
+    return "";
+  };
+
+  const validatePhone = (val: string) => {
+    const trimmed = val.trim();
+    if (!trimmed) return "Please enter your mobile number.";
+    const digits = trimmed.replace(/\D/g, "");
+    const phoneDigits = digits.length === 12 && digits.startsWith("91") ? digits.slice(2) : digits;
+    if (phoneDigits.length !== 10) return "Please enter a valid 10-digit mobile number.";
+    if (!/^[6-9]\d{9}$/.test(phoneDigits)) return "Please enter a valid Indian mobile number.";
+    return "";
+  };
+
+  const validateEmail = (val: string) => {
+    const trimmed = val.trim();
+    if (!trimmed) return "Please enter your email address.";
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(trimmed)) return "Please enter a valid email address (e.g. name@domain.com).";
+    return "";
+  };
+
+  const handleBlur = (field: 'name' | 'phone' | 'email') => {
+    setTouched((prev) => ({ ...prev, [field]: true }));
+    let err = "";
+    if (field === 'name') err = validateName(name);
+    if (field === 'phone') err = validatePhone(phone);
+    if (field === 'email') err = validateEmail(email);
+    setErrors((prev) => ({ ...prev, [field]: err }));
+  };
+
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    setName(val);
+    if (touched.name) {
+      setErrors((prev) => ({ ...prev, name: validateName(val) }));
     }
   };
 
-  const handleEmailSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!email) return;
-    setEmailStatus('saving');
-    try {
-      const FORMSPREE_ENDPOINT = 'https://formspree.io/f/placeholder_id';
-      await fetch(FORMSPREE_ENDPOINT, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, updateType: 'email_enrichment' })
-      });
-      setEmailStatus('saved');
-    } catch (error) {
-      console.error(error);
-      setEmailStatus('saved');
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    setPhone(val);
+    if (touched.phone) {
+      setErrors((prev) => ({ ...prev, phone: validatePhone(val) }));
     }
+  };
+
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    setEmail(val);
+    if (touched.email) {
+      setErrors((prev) => ({ ...prev, email: validateEmail(val) }));
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const nameErr = validateName(name);
+    const phoneErr = validatePhone(phone);
+    const emailErr = validateEmail(email);
+
+    setTouched({ name: true, phone: true, email: true });
+    setErrors({ name: nameErr, phone: phoneErr, email: emailErr });
+
+    if (nameErr || phoneErr || emailErr) return;
+
+    setStatus('loading');
+
+    try {
+      const queryParams = new URLSearchParams({ name: name.trim(), phone: phone.trim(), email: email.trim() }).toString();
+      const targetUrl = `${SHEET_ENDPOINT}?${queryParams}`;
+
+      // 1. Image Beacon (un-abortable background browser GET request)
+      const beacon = new window.Image();
+      beacon.src = targetUrl;
+
+      // 2. Secondary fetch fallback
+      fetch(targetUrl, { method: 'GET', mode: 'no-cors' }).catch(() => { });
+    } catch (err) {
+      console.error(err);
+    }
+
+    // Transition UI to success after request fires
+    setTimeout(() => {
+      setStatus('success');
+      setName('');
+      setPhone('');
+      setEmail('');
+      setErrors({});
+      setTouched({});
+    }, 400);
   };
 
   return (
@@ -111,87 +173,98 @@ export default function WaitlistPage() {
             {/* ── Form ──────────────────────────────────────── */}
             <div className="w-full max-w-sm mt-6">
               {status === 'success' ? (
-                /* Celebratory success state */
-                <div className="p-6 bg-white border border-[#F0E4C8] rounded-2xl flex flex-col gap-5 shadow-sm">
-                  <div className="flex flex-col gap-1.5">
-                    <div className="flex items-center gap-2.5 text-[#1A1200] font-semibold text-base">
-                      <CheckCircle2 className="w-5 h-5 text-[#10B981] shrink-0" />
-                      <span>You&apos;re on the list.</span>
-                    </div>
-                    <p className="text-sm text-[#8C7A5A] leading-relaxed pl-7">
-                      We&apos;ll text you when Hive is ready in Kochi.
-                    </p>
+                /* Clean success state — all data already captured */
+                <div className="p-6 bg-white border border-[#F0E4C8] rounded-2xl flex flex-col gap-3 shadow-sm">
+                  <div className="flex items-center gap-2.5 text-[#1A1200] font-semibold text-base">
+                    <CheckCircle2 className="w-5 h-5 text-[#10B981] shrink-0" />
+                    <span>You&apos;re on the list.</span>
                   </div>
-
-                  <div className="border-t border-[#F0E4C8] w-full" />
-
-                  {emailStatus === 'saved' ? (
-                    <p className="text-xs font-semibold text-[#10B981] flex items-center gap-1.5 py-1">
-                      <CheckCircle2 className="w-4 h-4" /> Launch updates enabled for {email}
-                    </p>
-                  ) : (
-                    <form onSubmit={handleEmailSubmit} className="flex flex-col gap-3">
-                      <p className="text-[13px] font-medium text-[#2C1E00]">
-                        Want occasional updates by email?
-                      </p>
-                      <Input
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        placeholder="Email (optional)"
-                        className="h-11 bg-white border-[#F0E4C8] rounded-xl px-3.5 text-sm placeholder:text-[#8C7A5A]/60 focus-visible:ring-1 focus-visible:ring-[#F5A623] shadow-none"
-                        disabled={emailStatus === 'saving'}
-                      />
-                      <div className="flex items-center gap-3">
-                        <Button
-                          type="submit"
-                          size="sm"
-                          className="h-9 px-5 bg-[#F5A623] hover:bg-[#E8890C] text-[#1A1200] font-semibold rounded-xl text-sm transition-all shadow-none"
-                          disabled={emailStatus === 'saving'}
-                        >
-                          {emailStatus === 'saving' ? 'Saving…' : 'Save'}
-                        </Button>
-                        <button
-                          type="button"
-                          onClick={() => setEmailStatus('saved')}
-                          className="text-[13px] font-medium text-[#8C7A5A] hover:text-[#1A1200] transition-colors cursor-pointer"
-                        >
-                          Skip
-                        </button>
-                      </div>
-                    </form>
-                  )}
+                  <p className="text-sm text-[#8C7A5A] leading-relaxed pl-7">
+                    We&apos;ll reach out when Hive is ready in Kochi. Keep an eye on your phone and inbox.
+                  </p>
                 </div>
               ) : (
-                /* Phone-first form */
-                <form className="flex flex-col w-full" onSubmit={handlePhoneSubmit}>
-                  {/* Merged proof + framing into one clean line */}
-                  <label className="block text-[12px] font-medium text-[#8C7A5A] mb-2">
+                /* Waitlist form — with inline validation */
+                <form onSubmit={handleSubmit} className="flex flex-col w-full gap-3" noValidate>
+                  <label className="block text-[12px] font-medium text-[#8C7A5A] mb-0.5">
                     Be among the first to shop with Hive in Kochi.
                   </label>
 
-                  <Input
-                    type="tel"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    placeholder="+91 Mobile number"
-                    className="h-[52px] bg-white border-[#F0E4C8] rounded-xl px-4 text-[15px] placeholder:text-[#8C7A5A]/60 focus-visible:ring-2 focus-visible:ring-[#F5A623] focus-visible:bg-white transition-all shadow-sm"
-                    required
-                    disabled={status === 'loading'}
-                  />
+                  {/* Name */}
+                  <div className="flex flex-col gap-1 w-full">
+                    <Input
+                      name="name"
+                      type="text"
+                      value={name}
+                      onChange={handleNameChange}
+                      onBlur={() => handleBlur('name')}
+                      placeholder="Your name"
+                      className={`h-[52px] bg-white border rounded-xl px-4 text-[15px] placeholder:text-[#8C7A5A]/60 transition-all shadow-sm ${
+                        touched.name && errors.name
+                          ? 'border-red-400 focus-visible:ring-red-400'
+                          : 'border-[#F0E4C8] focus-visible:ring-[#F5A623] focus-visible:bg-white'
+                      }`}
+                      disabled={status === 'loading'}
+                    />
+                    {touched.name && errors.name && (
+                      <span className="text-[12px] font-medium text-red-500 pl-1">{errors.name}</span>
+                    )}
+                  </div>
 
-                  {/* CTA — tighter gap (mt-2), feels like one unit with input */}
+                  {/* Phone */}
+                  <div className="flex flex-col gap-1 w-full">
+                    <Input
+                      name="phone"
+                      type="tel"
+                      value={phone}
+                      onChange={handlePhoneChange}
+                      onBlur={() => handleBlur('phone')}
+                      placeholder="+91 Mobile number"
+                      className={`h-[52px] bg-white border rounded-xl px-4 text-[15px] placeholder:text-[#8C7A5A]/60 transition-all shadow-sm ${
+                        touched.phone && errors.phone
+                          ? 'border-red-400 focus-visible:ring-red-400'
+                          : 'border-[#F0E4C8] focus-visible:ring-[#F5A623] focus-visible:bg-white'
+                      }`}
+                      disabled={status === 'loading'}
+                    />
+                    {touched.phone && errors.phone && (
+                      <span className="text-[12px] font-medium text-red-500 pl-1">{errors.phone}</span>
+                    )}
+                  </div>
+
+                  {/* Email */}
+                  <div className="flex flex-col gap-1 w-full">
+                    <Input
+                      name="email"
+                      type="email"
+                      value={email}
+                      onChange={handleEmailChange}
+                      onBlur={() => handleBlur('email')}
+                      placeholder="Email address"
+                      className={`h-[52px] bg-white border rounded-xl px-4 text-[15px] placeholder:text-[#8C7A5A]/60 transition-all shadow-sm ${
+                        touched.email && errors.email
+                          ? 'border-red-400 focus-visible:ring-red-400'
+                          : 'border-[#F0E4C8] focus-visible:ring-[#F5A623] focus-visible:bg-white'
+                      }`}
+                      disabled={status === 'loading'}
+                    />
+                    {touched.email && errors.email && (
+                      <span className="text-[12px] font-medium text-red-500 pl-1">{errors.email}</span>
+                    )}
+                  </div>
+
+                  {/* CTA */}
                   <Button
                     type="submit"
                     size="lg"
-                    className="mt-2 h-[52px] w-full text-white rounded-xl text-[15px] font-semibold shadow-none focus-visible:ring-2 focus-visible:ring-[#F5A623] transition-all"
+                    className="mt-1 h-[52px] w-full text-white rounded-xl text-[15px] font-semibold shadow-none focus-visible:ring-2 focus-visible:ring-[#F5A623] transition-all"
                     style={{ backgroundColor: '#211A14' }}
                     disabled={status === 'loading'}
                   >
                     {status === 'loading' ? 'Joining…' : 'Join waitlist'}
                   </Button>
 
-                  <p className="text-[12px] text-[#8C7A5A] font-medium mt-2.5">
+                  <p className="text-[12px] text-[#8C7A5A] font-medium mt-0.5">
                     Request an invitation to Hive&apos;s first launch in Kochi.
                   </p>
                 </form>
