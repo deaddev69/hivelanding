@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { Button, Input, HandWrittenTitle, GlowingInput } from '@/components/ui';
 import { CheckCircle2, ShoppingBag, Truck, BadgeCheck } from 'lucide-react';
 
-const LAUNCH_DATE_MS = new Date('2026-08-05T00:00:00+05:30').getTime();
+const LAUNCH_DATE_MS = new Date('2026-08-20T00:00:00+05:30').getTime();
 
 export default function WaitlistPage() {
   const [name, setName] = useState('');
@@ -162,7 +162,7 @@ export default function WaitlistPage() {
           className="h-[56px] w-auto object-contain"
         />
         <HandWrittenTitle
-          title="Launching 5 August • Kochi"
+          title="Launching 20 August • Kochi"
           className="w-fit py-2 px-4 mt-1"
           textClassName="text-[14px] sm:text-[16px] font-semibold text-[#1A1200] tracking-wide"
           strokeClassName="text-[#F5A623] opacity-85"
@@ -272,14 +272,14 @@ export default function WaitlistPage() {
                     <span>You&apos;re on the list.</span>
                   </div>
                   <p className="text-sm text-[#8C7A5A] leading-relaxed pl-7">
-                    We&apos;ll reach out when Hive launches on 5 August in Kochi. Keep an eye on your phone and inbox.
+                    We&apos;ll reach out when Hive launches on 20 August in Kochi. Keep an eye on your phone and inbox.
                   </p>
                 </div>
               ) : (
                 /* Waitlist form — with inline validation */
                 <form onSubmit={handleSubmit} className="flex flex-col w-full gap-3" noValidate>
                   <label className="block text-[12px] font-medium text-[#8C7A5A] mb-0.5">
-                    Be among the first to experience Hive on 5 August.
+                    Be among the first to experience Hive on 20 August.
                   </label>
 
                   {/* Name */}
@@ -356,7 +356,7 @@ export default function WaitlistPage() {
                   </Button>
 
                   <p className="text-[12px] text-[#8C7A5A] font-medium mt-0.5">
-                    Request early access to Hive&apos;s 5 August launch in Kochi.
+                    Request early access to Hive&apos;s 20 August launch in Kochi.
                   </p>
                 </form>
               )}
