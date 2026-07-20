@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { Button, Input } from '@/components/ui';
+import { Button, Input, HandWrittenTitle } from '@/components/ui';
 import { CheckCircle2, ShoppingBag, Truck, BadgeCheck } from 'lucide-react';
 
 const LAUNCH_DATE_MS = new Date('2026-08-05T00:00:00+05:30').getTime();
@@ -161,9 +161,13 @@ export default function WaitlistPage() {
           priority
           className="h-[56px] w-auto object-contain"
         />
-        <span className="text-[13px] font-medium text-[#8C7A5A] tracking-wide mt-2">
-          Launching 5 August • Kochi
-        </span>
+        <HandWrittenTitle
+          title="Launching 5 August • Kochi"
+          className="w-fit py-2 px-4 mt-1"
+          textClassName="text-[14px] sm:text-[16px] font-semibold text-[#1A1200] tracking-wide"
+          strokeClassName="text-[#F5A623] opacity-85"
+          strokeWidth={2}
+        />
       </header>
 
       {/* ── Hero ───────────────────────────────────────────────── */}
@@ -177,7 +181,7 @@ export default function WaitlistPage() {
 
             {/* Headline — General Sans 600, 36→64px, -0.04em, 1.05 leading */}
             <h1
-              className="text-[#1A1200] max-w-[360px] sm:max-w-[400px] lg:max-w-[460px]"
+              className="text-[#1A1200] max-w-[380px] sm:max-w-[460px] lg:max-w-[540px]"
               style={{
                 fontFamily: 'var(--font-display)',
                 fontSize: 'clamp(36px, 6.5vw, 64px)',
@@ -186,61 +190,76 @@ export default function WaitlistPage() {
                 letterSpacing: '-0.04em',
               }}
             >
-              Discover fashion you&apos;ll actually wear.
+              Get the fashion you love.{' '}
+              <span className="text-[#F5A623]">In hours.</span>
             </h1>
 
             {/* Subtext — General Sans 400, warm #5E5447 */}
-            <p
-              className="mt-5 max-w-[320px] sm:max-w-[340px]"
-              style={{
-                fontFamily: 'var(--font-display)',
-                fontSize: '16px',
-                color: '#5E5447',
-                lineHeight: 1.65,
-                fontWeight: 400,
-              }}
+            <div
+              className="mt-5 max-w-[440px] sm:max-w-[480px] lg:max-w-[520px] flex flex-col gap-2.5 text-[16px] text-[#5E5447] leading-[1.65] font-normal"
+              style={{ fontFamily: 'var(--font-display)' }}
             >
-              Discover carefully curated fashion, exclusive collections, and local favourites—all in one place.
-            </p>
+              <p>
+                No waiting days. No missed occasions. Just fashion delivered in hours.
+              </p>
+              <p>
+                Whether it&apos;s a last-minute plan or your next favourite outfit, Hive gets it to you while it still matters.
+              </p>
+            </div>
 
-            {/* ── Live Launch Countdown ─────────────────────── */}
-            <div className="w-full max-w-sm mt-6 p-4 bg-white/90 border border-[#F0E4C8] rounded-2xl flex flex-col gap-3 shadow-[0_2px_12px_-4px_rgba(26,18,0,0.04)]">
-              <div className="flex items-center justify-between text-[11px] font-semibold text-[#8C7A5A] tracking-wider uppercase px-1">
-                <span>Countdown to Launch</span>
-                <span className="text-[#1A1200]/70 font-medium lowercase">5 aug 2026</span>
+            {/* ── Live Launch Countdown — Pure Typography Apple Style ── */}
+            <div className="mt-8 flex items-baseline gap-5 sm:gap-8 select-none">
+              {/* Days */}
+              <div className="flex flex-col items-start min-w-[56px] sm:min-w-[68px]">
+                <span
+                  className="text-[44px] sm:text-[56px] font-semibold text-[#1A1200] leading-none tabular-nums"
+                  style={{ fontFamily: 'var(--font-display)', fontFeatureSettings: '"tnum"' }}
+                >
+                  {isMounted ? timeLeft.days : '0'}
+                </span>
+                <span className="text-[11px] font-medium text-[#8C7A5A] uppercase tracking-widest mt-2">
+                  Days
+                </span>
               </div>
-              {isMounted ? (
-                <div className="grid grid-cols-4 gap-2 pt-1 border-t border-[#F0E4C8]/60">
-                  <div className="flex flex-col items-center justify-center py-2 px-1 bg-[#FFFDF5] rounded-xl border border-[#F0E4C8]/70">
-                    <span className="text-[20px] font-semibold text-[#1A1200] leading-none tabular-nums" style={{ fontFamily: 'var(--font-display)' }}>
-                      {timeLeft.days}
-                    </span>
-                    <span className="text-[10px] font-medium text-[#8C7A5A] uppercase tracking-wide mt-1.5">Days</span>
-                  </div>
-                  <div className="flex flex-col items-center justify-center py-2 px-1 bg-[#FFFDF5] rounded-xl border border-[#F0E4C8]/70">
-                    <span className="text-[20px] font-semibold text-[#1A1200] leading-none tabular-nums" style={{ fontFamily: 'var(--font-display)' }}>
-                      {String(timeLeft.hours).padStart(2, '0')}
-                    </span>
-                    <span className="text-[10px] font-medium text-[#8C7A5A] uppercase tracking-wide mt-1.5">Hours</span>
-                  </div>
-                  <div className="flex flex-col items-center justify-center py-2 px-1 bg-[#FFFDF5] rounded-xl border border-[#F0E4C8]/70">
-                    <span className="text-[20px] font-semibold text-[#1A1200] leading-none tabular-nums" style={{ fontFamily: 'var(--font-display)' }}>
-                      {String(timeLeft.minutes).padStart(2, '0')}
-                    </span>
-                    <span className="text-[10px] font-medium text-[#8C7A5A] uppercase tracking-wide mt-1.5">Mins</span>
-                  </div>
-                  <div className="flex flex-col items-center justify-center py-2 px-1 bg-[#FFFDF5] rounded-xl border border-[#F0E4C8]/70">
-                    <span className="text-[20px] font-semibold text-[#1A1200] leading-none tabular-nums" style={{ fontFamily: 'var(--font-display)' }}>
-                      {String(timeLeft.seconds).padStart(2, '0')}
-                    </span>
-                    <span className="text-[10px] font-medium text-[#8C7A5A] uppercase tracking-wide mt-1.5">Secs</span>
-                  </div>
-                </div>
-              ) : (
-                <div className="h-[62px] w-full bg-[#FFFDF5] rounded-xl border border-[#F0E4C8]/70 flex items-center justify-center text-xs font-medium text-[#8C7A5A] animate-pulse">
-                  Loading countdown…
-                </div>
-              )}
+
+              {/* Hours */}
+              <div className="flex flex-col items-start min-w-[56px] sm:min-w-[68px]">
+                <span
+                  className="text-[44px] sm:text-[56px] font-semibold text-[#1A1200] leading-none tabular-nums"
+                  style={{ fontFamily: 'var(--font-display)', fontFeatureSettings: '"tnum"' }}
+                >
+                  {isMounted ? String(timeLeft.hours).padStart(2, '0') : '00'}
+                </span>
+                <span className="text-[11px] font-medium text-[#8C7A5A] uppercase tracking-widest mt-2">
+                  Hours
+                </span>
+              </div>
+
+              {/* Mins */}
+              <div className="flex flex-col items-start min-w-[56px] sm:min-w-[68px]">
+                <span
+                  className="text-[44px] sm:text-[56px] font-semibold text-[#1A1200] leading-none tabular-nums"
+                  style={{ fontFamily: 'var(--font-display)', fontFeatureSettings: '"tnum"' }}
+                >
+                  {isMounted ? String(timeLeft.minutes).padStart(2, '0') : '00'}
+                </span>
+                <span className="text-[11px] font-medium text-[#8C7A5A] uppercase tracking-widest mt-2">
+                  Mins
+                </span>
+              </div>
+
+              {/* Secs */}
+              <div className="flex flex-col items-start min-w-[56px] sm:min-w-[68px]">
+                <span
+                  className="text-[44px] sm:text-[56px] font-semibold text-[#1A1200] leading-none tabular-nums"
+                  style={{ fontFamily: 'var(--font-display)', fontFeatureSettings: '"tnum"' }}
+                >
+                  {isMounted ? String(timeLeft.seconds).padStart(2, '0') : '00'}
+                </span>
+                <span className="text-[11px] font-medium text-[#8C7A5A] uppercase tracking-widest mt-2">
+                  Secs
+                </span>
+              </div>
             </div>
 
             {/* ── Form ──────────────────────────────────────── */}
@@ -330,8 +349,7 @@ export default function WaitlistPage() {
                   <Button
                     type="submit"
                     size="lg"
-                    className="mt-1 h-[52px] w-full text-white rounded-xl text-[15px] font-semibold shadow-none focus-visible:ring-2 focus-visible:ring-[#F5A623] transition-all"
-                    style={{ backgroundColor: '#211A14' }}
+                    className="mt-1 h-[52px] w-full bg-[#F5A623] hover:bg-[#E2951A] text-[#1A1200] rounded-xl text-[15px] font-semibold border border-[#C49A1A]/30 shadow-[0_4px_14px_rgba(245,166,35,0.25)] hover:shadow-[0_6px_20px_rgba(245,166,35,0.35)] focus-visible:ring-2 focus-visible:ring-[#1A1200] transition-all duration-200"
                     disabled={status === 'loading'}
                   >
                     {status === 'loading' ? 'Joining…' : 'Join waitlist'}

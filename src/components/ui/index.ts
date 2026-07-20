@@ -1,3 +1,5 @@
 export * from './Button'
 export * from './Card'
 export * from './Input'
+export * from './hand-writing-text'
+export * from './demo'

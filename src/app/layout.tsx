@@ -8,8 +8,8 @@ const manrope = Manrope({
 });
 
 export const metadata: Metadata = {
-  title: "Hive | Premium Local Fashion",
-  description: "Discover curated independent fashion boutiques. Delivered in 60 minutes.",
+  title: "Hive | Get the fashion you love. In hours.",
+  description: "No waiting days. No missed occasions. Just fashion delivered in hours. Whether it's a last-minute plan or your next favourite outfit, Hive gets it to you while it still matters.",
 };
 
 export default function RootLayout({
