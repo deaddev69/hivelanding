@@ -179,7 +179,7 @@ export default function WaitlistPage() {
                 letterSpacing: '-0.04em',
               }}
             >
-              Premium fashion, delivered differently.
+              Discover fashion you&apos;ll actually wear.
             </h1>
 
             {/* Subtext — General Sans 400, warm #5E5447 */}
