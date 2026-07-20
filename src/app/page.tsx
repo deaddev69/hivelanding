@@ -129,7 +129,7 @@ export default function WaitlistPage() {
           className="h-[56px] w-auto object-contain"
         />
         <span className="text-[13px] font-medium text-[#8C7A5A] tracking-wide mt-2">
-          Launching in Kochi
+          Launching 5 August • Kochi
         </span>
       </header>
 
@@ -153,12 +153,12 @@ export default function WaitlistPage() {
                 letterSpacing: '-0.04em',
               }}
             >
-              Discover fashion you&apos;ll love, from stores near you.
+              Premium fashion, delivered differently.
             </h1>
 
             {/* Subtext — General Sans 400, warm #5E5447 */}
             <p
-              className="mt-5 max-w-[300px] sm:max-w-[320px]"
+              className="mt-5 max-w-[320px] sm:max-w-[340px]"
               style={{
                 fontFamily: 'var(--font-display)',
                 fontSize: '16px',
@@ -167,7 +167,7 @@ export default function WaitlistPage() {
                 fontWeight: 400,
               }}
             >
-              Shop from carefully selected fashion stores and have your order delivered across your city.
+              Discover carefully curated fashion, exclusive collections, and local favourites—all in one place.
             </p>
 
             {/* ── Form ──────────────────────────────────────── */}
@@ -180,14 +180,14 @@ export default function WaitlistPage() {
                     <span>You&apos;re on the list.</span>
                   </div>
                   <p className="text-sm text-[#8C7A5A] leading-relaxed pl-7">
-                    We&apos;ll reach out when Hive is ready in Kochi. Keep an eye on your phone and inbox.
+                    We&apos;ll reach out when Hive launches on 5 August in Kochi. Keep an eye on your phone and inbox.
                   </p>
                 </div>
               ) : (
                 /* Waitlist form — with inline validation */
                 <form onSubmit={handleSubmit} className="flex flex-col w-full gap-3" noValidate>
                   <label className="block text-[12px] font-medium text-[#8C7A5A] mb-0.5">
-                    Be among the first to shop with Hive in Kochi.
+                    Be among the first to experience Hive on 5 August.
                   </label>
 
                   {/* Name */}
@@ -265,7 +265,7 @@ export default function WaitlistPage() {
                   </Button>
 
                   <p className="text-[12px] text-[#8C7A5A] font-medium mt-0.5">
-                    Request an invitation to Hive&apos;s first launch in Kochi.
+                    Request early access to Hive&apos;s 5 August launch in Kochi.
                   </p>
                 </form>
               )}
@@ -290,13 +290,13 @@ export default function WaitlistPage() {
 
         </section>
 
-        {/* ── Store strip + discovery line ──────────────────────────── */}
+        {/* ── Brand strip + discovery line ──────────────────────────── */}
         <div className="mt-12 pt-7 border-t border-[#F0E4C8] flex flex-col gap-1">
           <p className="text-[13px] font-medium text-[#8C7A5A] tracking-wide">
-            Launching with selected fashion stores across Kochi.
+            Launching with curated fashion brands across Kochi.
           </p>
           <p className="text-[13px] font-medium text-[#C49A1A]">
-            Discover stores your city has been hiding.
+            Discover collections your city has been hiding.
           </p>
         </div>
 
@@ -311,7 +311,7 @@ export default function WaitlistPage() {
               </span>
             </div>
             <p className="text-[14px] text-[#5E5447] leading-relaxed">
-              Discover collections from carefully selected fashion stores chosen for quality and style.
+              Discover pieces chosen for exceptional craftsmanship, premium fabric, and enduring style.
             </p>
           </div>
 
@@ -323,7 +323,7 @@ export default function WaitlistPage() {
               </span>
             </div>
             <p className="text-[14px] text-[#5E5447] leading-relaxed">
-              Skip the long wait. Get fashion delivered from nearby stores across your city.
+              Skip the long wait. Experience rapid, same-day delivery right to your doorstep across the city.
             </p>
           </div>
 
@@ -331,11 +331,11 @@ export default function WaitlistPage() {
             <div className="flex items-center gap-2.5 shrink-0 sm:w-52">
               <BadgeCheck className="w-[15px] h-[15px] shrink-0" style={{ color: '#C49A1A' }} />
               <span className="text-[14px] font-semibold text-[#1A1200] leading-none">
-                Trusted stores
+                Trusted & Verified
               </span>
             </div>
             <p className="text-[14px] text-[#5E5447] leading-relaxed">
-              Shop confidently from verified stores with transparent pricing and reliable local support.
+              Shop confidently with transparent pricing, guaranteed authenticity, and dedicated local support.
             </p>
           </div>
 
@@ -356,7 +356,7 @@ export default function WaitlistPage() {
                 className="h-10 w-auto object-contain brightness-105"
               />
               <p className="text-[13px] text-[#FFFDF5]/50 font-medium tracking-wide">
-                Curated fashion from stores you&apos;ll love.
+                Curated fashion and exclusive collections, all in one place.
               </p>
             </div>
             {/* Copyright lower — sm:items-end pushes it to bottom of flex row */}
