@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { Button, Input, HandWrittenTitle } from '@/components/ui';
+import { Button, Input, HandWrittenTitle, GlowingInput } from '@/components/ui';
 import { CheckCircle2, ShoppingBag, Truck, BadgeCheck } from 'lucide-react';
 
 const LAUNCH_DATE_MS = new Date('2026-08-05T00:00:00+05:30').getTime();
@@ -349,7 +349,7 @@ export default function WaitlistPage() {
                   <Button
                     type="submit"
                     size="lg"
-                    className="mt-1 h-[52px] w-full bg-[#F5A623] hover:bg-[#E2951A] text-[#1A1200] rounded-xl text-[15px] font-semibold border border-[#C49A1A]/30 shadow-[0_4px_14px_rgba(245,166,35,0.25)] hover:shadow-[0_6px_20px_rgba(245,166,35,0.35)] focus-visible:ring-2 focus-visible:ring-[#1A1200] transition-all duration-200"
+                    className="mt-1 h-[52px] w-full bg-[#211A14] hover:bg-[#2C231B] text-[#F5A623] rounded-xl text-[15px] font-semibold border border-[#F5A623]/50 hover:border-[#F5A623] shadow-[0_4px_16px_rgba(245,166,35,0.15)] hover:shadow-[0_6px_24px_rgba(245,166,35,0.3)] focus-visible:ring-2 focus-visible:ring-[#F5A623] transition-all duration-200"
                     disabled={status === 'loading'}
                   >
                     {status === 'loading' ? 'Joining…' : 'Join waitlist'}
