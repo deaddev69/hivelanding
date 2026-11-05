@@ -40,7 +40,6 @@ export default function WaitlistPage() {
   const [errors, setErrors] = useState<{ name?: string; phone?: string; email?: string }>({});
   const [touched, setTouched] = useState<{ name?: boolean; phone?: boolean; email?: boolean }>({});
 
-  const SHEET_ENDPOINT = 'https://script.google.com/macros/s/AKfycbzltQlQlhnQFQQSwOuLuwxkxvau0ani_eSiQWJo56BCUw-5Fgv0pa638RtDNQJKEo_4/exec';
 
   // Validation functions
   const validateName = (val: string) => {

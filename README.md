@@ -1,36 +1,26 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Hive Now pre-launch page
 
-## Getting Started
+![Hive Now](public/hero.png)
 
-First, run the development server:
+This is the waitlist page we ran before [Hive Now](https://hivenow.in) went live in Kochi in August 2026. People signed up for early access, and a countdown ticked down to launch day.
+
+Hive Now is live now at [hivenow.in](https://hivenow.in), so this page has been retired. The code stays here as a record of where it started.
+
+## What it did
+
+- A launch countdown to 20 August 2026
+- A waitlist form with name, phone and email, checked as you type
+- A small server route that saved each sign-up to a Google Sheet, once per submit
+
+## Built with
+
+Next.js, React, Tailwind CSS and Framer Motion, hosted on Vercel.
+
+## Running it
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The waitlist form needs a `WAITLIST_SHEET_ENDPOINT` environment variable pointing to a Google Apps Script web app. Without it, the form shows an error and nothing is saved.

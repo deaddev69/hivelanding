@@ -1,8 +1,12 @@
 import { NextResponse } from 'next/server';
 
-const SHEET_ENDPOINT = 'https://script.google.com/macros/s/AKfycbzltQlQlhnQFQQSwOuLuwxkxvau0ani_eSiQWJo56BCUw-5Fgv0pa638RtDNQJKEo_4/exec';
+const SHEET_ENDPOINT = process.env.WAITLIST_SHEET_ENDPOINT;
 
 export async function POST(request: Request) {
+  if (!SHEET_ENDPOINT) {
+    return NextResponse.json({ error: 'Waitlist is closed' }, { status: 503 });
+  }
+
   try {
     const { name, phone, email } = await request.json();
 
